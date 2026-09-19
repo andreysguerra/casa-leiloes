@@ -2,7 +2,7 @@ import javax.swing.JOptionPane;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import java.sql.ResultSet;
-
+import java.util.List;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -21,6 +21,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     public listagemVIEW() {
         initComponents();
         listarProdutos();
+        
     }
 
 private void carregarTabela() {
@@ -156,26 +157,32 @@ private void carregarTabela() {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
-        
-        ProdutosDAO produtosdao = new ProdutosDAO();
-        
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+    int linha = listaProdutos.getSelectedRow();
+    if (linha == -1) {
+        JOptionPane.showMessageDialog(this, "Selecione um produto na tabela!");
+        return;
+    }
+
+    int idProduto = (int) listaProdutos.getValueAt(linha, 0); // coluna 0 = ID
+    ProdutosDAO dao = new ProdutosDAO();
+    dao.venderProduto(idProduto);
+
+    listarProdutos(); // atualiza a tabela
+
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        //vendasVIEW vendas = new vendasVIEW(); 
-        //vendas.setVisible(true);
+    Vendas telaVendas = new Vendas();
+    telaVendas.setVisible(true);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+
+
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

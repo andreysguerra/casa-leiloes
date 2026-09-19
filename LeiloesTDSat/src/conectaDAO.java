@@ -30,4 +30,8 @@ public class conectaDAO {
         }
         return conn;
     }
+
+public static Connection getConnection() {
+    return new conectaDAO().connect();
+}
 }

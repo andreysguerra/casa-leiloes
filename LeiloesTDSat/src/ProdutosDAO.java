@@ -1,18 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
- */
-
+import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.SQLException;
 
 
 public class ProdutosDAO {
@@ -38,7 +30,40 @@ public class ProdutosDAO {
         JOptionPane.showMessageDialog(null, "Erro ao cadastrar produto: " + e.getMessage());
     }
     }
+
     
+public void venderProduto(int idProduto) {
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+        try (Connection conn = new conectaDAO().connect();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idProduto);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+public List<ProdutosDTO> listarProdutosVendidos() {
+        List<ProdutosDTO> vendidos = new ArrayList<>();
+        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+        try (Connection conn = conectaDAO.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getInt("valor"));
+                p.setStatus(rs.getString("status"));
+                vendidos.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vendidos;
+    }
+
+
     public ArrayList<ProdutosDTO> listarProdutos(){
          ArrayList<ProdutosDTO> lista = new ArrayList<>();
     String sql = "SELECT * FROM produtos";
