@@ -21,27 +21,25 @@ public class listagemVIEW extends javax.swing.JFrame {
     public listagemVIEW() {
         initComponents();
         listarProdutos();
+        carregarTabela();
         
     }
 
 private void carregarTabela() {
-    try {
-        ProdutosDAO dao = new ProdutosDAO();
-        ResultSet rs = dao.listarProdutos();
+ProdutosDAO dao = new ProdutosDAO(); 
+List<ProdutosDTO> lista = dao.listarProdutosVendidos();
 
-        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-        model.setRowCount(0); // limpa tabela
+DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+model.setRowCount(0);
 
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getString("nome"),
-                rs.getInt("valor"),
-                rs.getString("status")
-            });
-        }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Erro ao carregar tabela: " + e.getMessage());
-    }
+for (ProdutosDTO p : lista) {
+    model.addRow(new Object[]{
+        p.getId(),
+        p.getNome(),
+        p.getValor(),
+        p.getStatus()
+    });
+}
 }
 
 
